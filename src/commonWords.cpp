@@ -15,70 +15,38 @@ NOTES: If there are no common words return NULL.
 #include <malloc.h>
 #define SIZE 31
 int stringlen(char *rev);
+int checkword(char *p, char *w);
 
-char ** commonWords(char *str1, char *str2) {
-	if (str1 != '\0'&&str2 != '\0'){
-		int i=0, j=0,k=0,l=0,m=0,n=0;
-		char wordpool[20][SIZE] = {NULL};
-		char **commonwords[10][SIZE];
-		int len1 = stringlen(str1);
-		int len2 = stringlen(str2);
-		char *word1 = (char*)malloc(sizeof(char) * SIZE);
-		while (i<=len1){
-			
-			if (str1[i] != ' '||str1[i]!='\0'){
-				word1[k] = str1[i];
-				k++;
-			}
-			else{
-				word1[k] = '\0';
-				wordpool[m][SIZE] = *word1;
-				free(word1);
-				word1 = (char*)malloc(sizeof(char)*SIZE);
-				k = 0;
-				m = m + 2;;
-			}
-			i++;
-		}
-		free(word1);
-		char *word2 = (char*)malloc(sizeof(char) * SIZE);
-		while (j<=len2){
-		
-			if (str2[j] != ' '||str2[j] != '\0'){
-				word2[l] = str2[j];
-				l++;
-			}
-			else{
-				word2[l] = '\0';
-				int i;
-				for (i = 0; i < 20; i=i+2){
-					if (*word2 == wordpool[i][SIZE]){
-						wordpool[i + 1][SIZE] = *word2;
-						free(word2);
-						l = 0;
-						word2 = (char*)malloc(sizeof(char)*SIZE);
-						break;
-					}
+char** commonWords(char *str1, char *str2) {
+	if (str1 !=NULL&&str2 != NULL){
+		int i=0,j=0,n=0;
+		char *commonwords[10];
+		char *word = (char*)malloc(sizeof(char)*SIZE);
+		word = NULL;
+		while (str1[i] != '\0'){
+			if ((str1[i]== ' ' || str1[i] == '\0')&&word!=NULL){
+				word[j] = '\0';
+				if (checkword(str2, word)){
+					commonwords[n][10]= (char)malloc(sizeof(char)*SIZE);
+					commonwords[n][10] = *word;
+					n++;
+					j = 0;
+					free(word);
+					word = (char*)malloc(sizeof(char)*SIZE);
 				}
+				i++;
 			}
-			j++;
-		}
-		free(word2);
-		for (int i = 0; i < 20; i = i + 2){
-			if (wordpool[i][SIZE] != NULL&&wordpool[i + 1][SIZE] != NULL){
-				char *temp = (char*)malloc(sizeof(char) * 10);
-			     temp = wordpool[i];
-				*commonwords[n][SIZE] = (char*)malloc(sizeof(char) * SIZE);
-				*commonwords[n][SIZE] = temp;
-				n++;
+			else{
+				word[j] = str1[i];
+				j++;
+				i++;
 			}
-			
 		}
 		if (n == 0){
 			return NULL;
 		}
 		else{
-			return **commonwords;
+			return commonwords;
 		}
 	}
 	else{
@@ -92,4 +60,32 @@ int stringlen(char *rev){
 		rev++;
 	}
 	return len;
+}
+int checkword(char *p, char *w){
+	int count = 0, k = 0, j = 0;
+	while (p[k] != '\0'){
+		if (p[k] == w[j]){
+			count++;
+			j++;
+			k++;
+			continue;
+		}
+		else if (p[k] == ' ' || p[k] == '\0'){
+			if (count == stringlen(w)){
+				return 1;
+			}
+			else{
+				if (p[k] == '\0'){
+					return 0;
+				}
+				else{
+					k++;
+					j = 0;
+					count = 0;
+					continue;
+				}
+			}
+		}
+
+	 }
 }
