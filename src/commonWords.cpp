@@ -15,7 +15,7 @@ NOTES: If there are no common words return NULL.
 #include <malloc.h>
 #define SIZE 31
 
-int isWordExist(char *str, char *word, int wordLen) {
+int iswordinstr2(char *str, char *word, int wordLen) {
 	if (*str == '\0' || *word == '\0' || wordLen == 0) {
 		return 0;
 	}
@@ -35,7 +35,7 @@ int isWordExist(char *str, char *word, int wordLen) {
 	return 0;
 }
 
-void addWordToResult(char **result, char *word, int wordLen, int r) {
+void common(char **result, char *word, int wordLen, int r) {
 	for (int c = 0; c < wordLen; c++) {
 		result[r][c] = word[c];
 	}
@@ -46,9 +46,9 @@ char ** commonWords(char *str1, char *str2) {
 	if (!str1 || !str2) {
 		return NULL;
 	}
-	char **result = (char**)malloc(sizeof(char*) * 10); // max common words 10
+	char **commonwords = (char**)malloc(sizeof(char*) * 10); 
 	for (int i = 0; i < 10; i++) {
-		result[i] = (char*)malloc(SIZE);
+		commonwords[i] = (char*)malloc(SIZE);
 	}
 	int r = 0;
 	char *word = (char*)malloc(SIZE);
@@ -60,24 +60,22 @@ char ** commonWords(char *str1, char *str2) {
 			j++;
 			word[j] = '\0';
 		}
-		else {
-			// if space, compare word			
-			if (isWordExist(str2, word, j)) {
-				addWordToResult(result, word, j, r); // j = length of word, r = row
+		else {		
+			if (iswordinstr2(str2, word, j)) {
+			   common(commonwords, word, j, r); 
 				r++;
 			}
 			j = 0;
 		}
 		i++;
 	}
-	// last word
-	if (isWordExist(str2, word, j)) {
-		addWordToResult(result, word, j, r); // j = length of word, r = row
+	if (iswordinstr2(str2, word, j)) {
+		common(commonwords, word, j, r); 
 		r++;
 	}
 	if (r == 0) {
-		return NULL; // No common words
+		return NULL; 
 	}
-	result[r] = NULL; // make remaining rows null
-	return result;
+	commonwords[r] = NULL;
+	return commonwords;
 }
